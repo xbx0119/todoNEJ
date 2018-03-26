@@ -4,8 +4,22 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var routes = require('./routes');
+
+
+// mongodb
+var mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
+
+var dbURL = 'mongodb://localhost/todo';
+mongoose.connect(dbURL, {
+}, function (err) {
+  if (err) {
+    console.log("failed to connect mongodb");
+  } else {
+    console.log("connected to mongodb");
+  }
+});
 
 var app = express();
 
@@ -19,8 +33,17 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+// // 跨域
+app.all('*', function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
+  res.header("X-Powered-By", ' 3.2.1')
+  res.header("Content-Type", "application/json;charset=utf-8");
+  next();
+});
+
+app.use('/', routes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

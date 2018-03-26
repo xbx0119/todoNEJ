@@ -5,96 +5,37 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>toNEJ</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="/css/app.css">
     <link rel="stylesheet" href="/css/ionicons.css">
+    <link rel="stylesheet" href="/css/app.css">
 </head>
-<body>
-    <div id="root">
 
-        <h1 class="appName">TODO</h1>
-        <div id="todo">
-            <div class="todo-list">
-                <li class="todo-item">
-                    <i class="icon ion-android-checkbox-outline-blank todo-item-check"></i>
-                    <p class="todo-item-name">学习NEJ，完成Todo应用</p>
-                    <i class="icon ion-trash-a todo-item-del"></i>
-                </li>                
-                <li class="todo-item">
-                    <i class="icon ion-android-checkbox-outline-blank todo-item-check"></i>
-                    <p class="todo-item-name">学习NEJ，完成Todo应用</p>
-                    <i class="icon ion-trash-a todo-item-del"></i>
-                </li>                
-                <li class="todo-item">
-                    <i class="icon ion-android-checkbox-outline-blank todo-item-check"></i>
-                    <p class="todo-item-name">学习NEJ，完成Todo应用</p>
-                    <i class="icon ion-trash-a todo-item-del"></i>
-                </li>                
-                <li class="todo-item">
-                    <i class="icon ion-android-checkbox-outline-blank todo-item-check"></i>
-                    <p class="todo-item-name">学习NEJ，完成Todo应用</p>
-                    <i class="icon ion-trash-a todo-item-del"></i>
-                </li>                
-                <li class="todo-item">
-                    <i class="icon ion-android-checkbox-outline-blank todo-item-check"></i>
-                    <p class="todo-item-name">学习NEJ，完成Todo应用</p>
-                    <i class="icon ion-trash-a todo-item-del"></i>
-                </li>                
-                <li class="todo-item">
-                    <i class="icon ion-android-checkbox-outline-blank todo-item-check"></i>
-                    <p class="todo-item-name">学习NEJ，完成Todo应用</p>
-                    <i class="icon ion-trash-a todo-item-del"></i>
-                </li>                
-                <li class="todo-item">
-                    <i class="icon ion-android-checkbox-outline-blank todo-item-check"></i>
-                    <p class="todo-item-name">学习NEJ，完成Todo应用</p>
-                    <i class="icon ion-trash-a todo-item-del"></i>
-                </li>                
-                <li class="todo-item">
-                    <i class="icon ion-android-checkbox-outline-blank todo-item-check"></i>
-                    <p class="todo-item-name">学习NEJ，完成Todo应用</p>
-                    <i class="icon ion-trash-a todo-item-del"></i>
-                </li>                
-                <li class="todo-item">
-                    <i class="icon ion-android-checkbox-outline-blank todo-item-check"></i>
-                    <p class="todo-item-name">学习NEJ，完成Todo应用</p>
-                    <i class="icon ion-trash-a todo-item-del"></i>
-                </li>                
-                <li class="todo-item">
-                    <i class="icon ion-android-checkbox-outline-blank todo-item-check"></i>
-                    <p class="todo-item-name">学习NEJ，完成Todo应用</p>
-                    <i class="icon ion-trash-a todo-item-del"></i>
-                </li>                
-                <li class="todo-item">
-                    <i class="icon ion-android-checkbox-outline-blank todo-item-check"></i>
-                    <p class="todo-item-name">学习NEJ，完成Todo应用</p>
-                    <i class="icon ion-trash-a todo-item-del"></i>
-                </li>                
-                <li class="todo-item">
-                    <i class="icon ion-android-checkbox-outline-blank todo-item-check"></i>
-                    <p class="todo-item-name">学习NEJ，完成Todo应用</p>
-                    <i class="icon ion-trash-a todo-item-del"></i>
-                </li>                
-                <li class="todo-item">
-                    <i class="icon ion-android-checkbox-outline-blank todo-item-check"></i>
-                    <p class="todo-item-name">学习NEJ，完成Todo应用</p>
-                    <i class="icon ion-trash-a todo-item-del"></i>
-                </li>                
-                <li class="todo-item">
-                    <i class="icon ion-android-checkbox-outline-blank todo-item-check"></i>
-                    <p class="todo-item-name">学习NEJ，完成Todo应用</p>
-                    <i class="icon ion-trash-a todo-item-del"></i>
-                </li>                
-                <li class="todo-item">
-                    <i class="icon ion-android-checkbox-outline-blank todo-item-check"></i>
-                    <p class="todo-item-name">学习NEJ，完成Todo应用</p>
-                    <i class="icon ion-trash-a todo-item-del"></i>
-                </li>                
-            </div>
+<body>
+    <div class="bg_img"></div>
+    <div id="root">
+        <div class="header">
+            <button class="icon ion-ios-arrow-back" id="back"></button>
+            <h1 class="appName">TODO</h1>
+            <button class="icon ion-android-add" id="add"></button>
         </div>
+        <div id="todo" class="todo-list"></div>
         <p class="footer">Power by Express & NEJ</p>
     </div>
-    
+
+
+    <div id="template" style="display:none;">
+        <textarea name="jst" id="box1">
+            {list xlist as x}
+                <li class="todo-item">
+                    <i class="icon ion-android-checkbox-outline-blank todo-item-check"></i>
+                    <p class="todo-item-name">${x.title}</p>
+                    <i class="icon ion-trash-a todo-item-del"></i>
+                </li>
+            {/list}
+        </textarea>
+    </div>
+
     <script src="/js/nej/src/define.js?pro=./"></script>
-    
+    <script src="/js/prj/todo.js"></script>
 </body>
+
 </html>
