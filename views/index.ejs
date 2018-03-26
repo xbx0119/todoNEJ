@@ -2,13 +2,11 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>toNEJ</title>
+    <title>todoNEJ</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/css/ionicons.css">
     <link rel="stylesheet" href="/css/app.css">
 </head>
-
 <body>
     <div class="bg_img"></div>
     <div id="root">
@@ -26,16 +24,16 @@
         <textarea name="jst" id="box1">
             {list xlist as x}
                 <li class="todo-item">
-                    <i class="icon ion-android-checkbox-outline-blank todo-item-check"></i>
+                    <i class="icon ion-android-checkbox-outline-blank todo-item-check" onclick=""></i>
                     <p class="todo-item-name">${x.title}</p>
-                    <i class="icon ion-trash-a todo-item-del"></i>
+                    <i class="icon ion-trash-a todo-item-del" onclick=""></i>
                 </li>
             {/list}
         </textarea>
     </div>
 
     <script src="/js/nej/src/define.js?pro=./"></script>
+    <script src="/js/prj/modal.js"></script>
     <script src="/js/prj/todo.js"></script>
 </body>
-
 </html>

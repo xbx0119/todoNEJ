@@ -20,7 +20,9 @@ html, body {
 #root {
     width: 100%;
     height: 100%;
-    float: left;
+    position: absolute;
+    left: 0;
+    top: 0;
 }
 
 .header {
@@ -52,11 +54,8 @@ html, body {
     width: 750px;
     height: 500px;
     overflow: auto;
-    /* background: #fafafa; */
     border-radius: 5px;
     margin: 0 auto;
-    /* padding-top: 8px;
-    padding-bottom: 8px; */
 }
 
 .todo-list .todo-item {
@@ -178,3 +177,11 @@ html, body {
         /* background: #fff; */
     }
 }
+
+
+#root .w-win .zttl{background-color:#fff;margin:0 4px;border-bottom:1px solid #ddd;height:42px;line-height:42px;text-indent:15px;}
+#root .w-win .zbar{border:none;background-color:#fff}
+#root .w-win .zcnt{padding:10px 0 0 0 }
+#root .w-win .btns{background-color:#f7f7f7}
+#root .w-win .itm{text-align:center} 
+#root .w-win .btns{text-align:right}

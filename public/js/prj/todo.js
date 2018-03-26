@@ -1,4 +1,4 @@
-var f = function () {
+var todo = function () {
     var _ = NEJ.P,
         _e = _('nej.e'),
         _v = _('nej.v'),
@@ -73,11 +73,11 @@ var f = function () {
 
 
     // 页面按钮功能函数绑定
-    _v._$addEvent(_e._$get('add'), 'click', showAddModdal._$bind(this));
-    _v._$addEvent(_e._$get('edit'), 'click', showEditModdal._$bind(this));
+    // _v._$addEvent(_e._$get('add'), 'click', showAddModdal._$bind(this));
+    // _v._$addEvent(_e._$get('edit'), 'click', showEditModdal._$bind(this));
     // _v._$addEvent(_e._$get('del'), 'click', showAddModdal._$bind(this));
 
     // 页面初始化
     search(TODO_API.ALL);
 };
-define(['{lib}util/template/tpl.js', '{lib}util/tab/tab.js'], f);
+define(['{lib}util/template/tpl.js'], todo);
