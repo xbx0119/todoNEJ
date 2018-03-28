@@ -78,6 +78,7 @@ TodoModel.edit = async function (id, data) {
 }
 
 TodoModel.del = async function (id) {
+    console.log("remove " + id)
     try {
         var item = await Todo.remove({
             _id: id

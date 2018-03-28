@@ -47,13 +47,8 @@ const add = async function (req, res, next) {
 }
 
 const del = async function (req, res, next) {
-    const item = {
-        title: req.body.title,
-        content: req.body.content,
-        done: false
-    }
     try {
-        if (await Todo.del(req.body.id, item)) {
+        if (await Todo.del(req.params.id)) {
             res.send(true);
         } else {
             res.send()
@@ -64,6 +59,11 @@ const del = async function (req, res, next) {
 }
 
 const edit = async function (req, res, next) {
+    const item = {
+        title: req.body.title,
+        content: req.body.content,
+        done: req.body.done
+    }
     try {
         if (await Todo.edit(req.body.id, item)) {
             res.send(true);
@@ -85,7 +85,7 @@ exports.regist = function(router) {
     // 增加todo项
     router.post('/api/todo', add);
     // 删除todo项
-    router.delete('/api/todo', del);
+    router.delete('/api/todo/:id', del);
     // 修改todo项
-    router.put('/api/todo', edit);
+    router.put('/api/todo/:id', edit);
 }

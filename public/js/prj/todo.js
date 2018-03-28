@@ -2,22 +2,13 @@ var todo = function () {
     var _ = NEJ.P,
         _e = _('nej.e'),
         _v = _('nej.v'),
-        _j = _('nej.j');
+        _j = _('nej.j'),
+        _m = _('nej.modal');
 
     const TODO_API = {
         ALL: '/api/todo_all',
         DONE: '/api/todo_done',
         UNDO: '/api/todo_undo'
-    }
-
-    
-    //解析模板
-    _e._$parseTemplate('template');
-    
-    // 渲染列表
-    const renderItems = function(data) {
-        var _todolist = _e._$get('todo');
-        _todolist.innerHTML = _e._$getHtmlTemplate('box1', { xlist: data });
     }
 
     // 获取列表数据
@@ -36,7 +27,6 @@ var todo = function () {
             sync: false,
             type: "json",
             data: null,
-            // query: "userid=126770605",
             method: "POST",
             onload: function(data) {
                 // 显示成功或失败消息
@@ -46,29 +36,24 @@ var todo = function () {
         });
     }
 
-    const del = function () {
-        _j._$request('/api/todo', {
+    const del = function(id) {
+        _j._$request('/api/todo/' + id, {
             sync: false,
             type: "json",
             data: null,
-            query: "id=1",
             method: "DELETE",
             onload: function (data) {
-                // 显示成功或失败消息
-                alert(data)
+                console.log(data)
                 search(TODO_API.ALL)
             }
         });
     }
 
-    const showAddModdal = function() {
-        alert("add")
-    }
-    const showEditModdal = function() {
-        alert("edit")
-    }
-    const showDelModdal = function() {
-        alert("del")
+    const showDelModal = function(e) {
+        var _id = e.target.parentNode.dataset.key;
+        _m._$showModal(e, function() {
+            del(_id)
+        });
     }
 
 
@@ -77,7 +62,21 @@ var todo = function () {
     // _v._$addEvent(_e._$get('edit'), 'click', showEditModdal._$bind(this));
     // _v._$addEvent(_e._$get('del'), 'click', showAddModdal._$bind(this));
 
+    
+    // 解析模板
+    _e._$parseTemplate('template');
+    // 渲染列表
+    const renderItems = function (data) {
+        var _todolist = _e._$get('todo');
+        _todolist.innerHTML = _e._$getHtmlTemplate('box1', { xlist: data  });
+
+        // 绑定事件
+        var _delBtn = _e._$getByClassName('todo', 'todo-item-del');
+        _delBtn.forEach(function(btn, index) {
+            _v._$addEvent(btn, 'click', showDelModal);
+        });
+    }
     // 页面初始化
     search(TODO_API.ALL);
 };
-define(['{lib}util/template/tpl.js'], todo);
+define(['{lib}base/element.js', '{lib}util/template/tpl.js', '{pro}js/prj/modal.js'], todo);

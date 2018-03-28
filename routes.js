@@ -7,6 +7,9 @@ var TodoAPI = require('./api/todo');
 router.get('/', function(req, res, next) {
   res.render('index')
 });
+router.get('/add', function(req, res, next) {
+  res.render('add')
+});
 
 
 // 注册api
