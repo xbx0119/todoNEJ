@@ -30,12 +30,10 @@ a Todo List App based on NEJ
     * 参数 
         * title: String, todo的标题, 
         * content: String, todo的内容 
-5. PUT /api/todo 
+5. PUT /api/todo/:id
     * 更新todo
     * 参数 
-        * id: Number, 需要修改的todo的id
         * todo: Object, 新的todo的对象
-6. DELETE /api/todp 
+6. DELETE /api/todp/:id 
     * 删除todo
-    * 参数
-        * id：Number, 需要删除的todo的id值 
+    * 参数：无

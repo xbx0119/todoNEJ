@@ -5,64 +5,104 @@
  * @author   genify(caijf@corp.netease.com)
  * ------------------------------------------
  */
-var f = function(){
-    // variable declaration
-    var _  = NEJ.P,
-        _o = NEJ.O,
-        _p = _('nej.p'),
-        _platform  = window.navigator.platform,
-        _useragent = window.navigator.userAgent;
+/** @module base/platform */
+NEJ.define([
+    './global.js'
+],function(NEJ,_p,_o,_f,_r){
+    var _platform  = this.navigator.platform,
+        _useragent = this.navigator.userAgent;
     /**
      * 平台判断信息
      * 
-     * [ntb]
-     *  参数名称       | 参数类型          | 参数描述
-     *  ------------------------------------
-     *  mac      | Boolean    | is mac os
-     *  win      | Boolean    | is windows os
-     *  linux    | Boolean    | is linux os
-     *  ipad     | Boolean    | is ipad device
-     *  iphone   | Boolean    | is iphone device
-     *  android  | Boolean    | is android system
-     *  ios      | Boolean    | is ios system
-     *  tablet   | Boolean    | is tablet
-     *  desktop  | Boolean    | is desktop env
-     * [/ntb]
+     * ```javascript
+     * NEJ.define([
+     *     'base/platform'
+     * ],function(_m){
+     *     var _is = _m._$IS;
+     *     // 是否MAC系统
+     *     console.log(_is.mac);
+     *     // 是否IPhone
+     *     console.log(_is.iphone);
+     *     // ...
+     * });
+     * ```
      * 
-     * @const  {nej.p._$IS}
-     * @type   {Object}
+     * @const    module:base/platform._$IS
+     * @see      module:base/platform._$is
+     * @type     {Object}
+     * @property {Boolean} mac     - 是否Mac系统
+     * @property {Boolean} win     - 是否windows系统
+     * @property {Boolean} linux   - 是否linux系统
+     * @property {Boolean} ipad    - 是否Ipad
+     * @property {Boolean} iphone  - 是否IPhone
+     * @property {Boolean} android - 是否Android系统
+     * @property {Boolean} ios     - 是否IOS系统
+     * @property {Boolean} tablet  - 是否平板
+     * @property {Boolean} desktop - 是否桌面系统
      */
     var _is = {
-        mac        : _platform
-       ,win        : _platform
-       ,linux      : _platform
-       ,ipad       : _useragent
-       ,ipod       : _useragent
-       ,iphone     : _platform
-       ,android    : _useragent
+        mac     : _platform,
+        win     : _platform,
+        linux   : _platform,
+        ipad    : _useragent,
+        ipod    : _useragent,
+        iphone  : _platform,
+        android : _useragent
     };
     _p._$IS = _is;
-    for(var x in _is)
+    for(var x in _is){
         _is[x] = new RegExp(x,'i').test(_is[x]);
+    }
     _is.ios = _is.ipad||_is.iphone||_is.ipod;
     _is.tablet = _is.ipad;
     _is.desktop = _is.mac||_is.win||(_is.linux&&!_is.android);
+    /**
+     * 判断是否指定平台
+     * 
+     * ```javascript
+     * NEJ.define([
+     *     'base/platform'
+     * ],function(_m){
+     *     // 是否MAC系统
+     *     console.log(_m._$is('mac'));
+     *     // 是否iphone
+     *     console.log(_m._$is('iphone'));
+     *     // ...
+     * });
+     * ```
+     * 
+     * @method module:base/platform._$is
+     * @see    module:base/platform._$IS
+     * @param  {String} arg0 - 平台名称
+     * @return {Boolean}       是否指定平台
+     */
+    _p._$is = function(_platform){
+        return !!_is[_platform];
+    };
     // parse kernel information
     /**
      * 引擎内核信息
      * 
-     * [ntb]
-     *  参数名称       | 参数类型          | 参数描述
-     *  ------------------------------------
-     *  engine   | String  | layout engine, trident/webkit/gecko/presto...
-     *  release  | Number  | layout engine version
-     *  browser  | String  | browser name, ie/chrome/safari/opera/firefox/maxthon...
-     *  version  | Number  | browser version
-     *  prefix   | Object  | prefix for html5/css3 attribute/method/constructor name
-     * [/ntb]
+     * ```javascript
+     * NEJ.define([
+     *     'base/platform'
+     * ],function(_m){
+     *     var _kernel = _m._$KERNEL;
+     *     // 打印平台信息
+     *     console.log(_kernel.engine);
+     *     console.log(_kernel.release);
+     *     console.log(_kernel.browser);
+     *     console.log(_kernel.version);
+     * });
+     * ```
      * 
-     * @const  {nej.p._$KERNEL}
-     * @type   {Object}
+     * @const    module:base/platform._$KERNEL
+     * @type     {Object}
+     * @property {String} engine  - 布局引擎，trident/webkit/gecko/presto...
+     * @property {Number} release - 布局引擎版本
+     * @property {String} browser - 浏览器名称，ie/chrome/safari/opera/firefox/maxthon...
+     * @property {Number} version - 浏览器版本
+     * @property {Object} prefix  - 平台前缀，html5/css3 attribute/method/constructor
      */
     var _kernel = {
         engine:'unknow',
@@ -72,14 +112,15 @@ var f = function(){
         prefix:{css:'',pro:'',clz:''}
     };
     _p._$KERNEL  = _kernel;
-    if (/msie\s+(.*?);/i.test(_useragent)){
+    if (/msie\s+(.*?);/i.test(_useragent)||
+        /trident\/.+rv:([\d\.]+)/i.test(_useragent)){
         _kernel.engine  = 'trident';
         _kernel.browser = 'ie';
         _kernel.version = RegExp.$1;
         _kernel.prefix  = {css:'ms',pro:'ms',clz:'MS',evt:'MS'};
-        // 4.0-ie8 5.0-ie9 6.0-ie10
+        // 4.0-ie8 5.0-ie9 6.0-ie10 7.0-ie11
         // adjust by document mode setting in develop toolbar
-        var _test = {6:'2.0',7:'3.0',8:'4.0',9:'5.0',10:'6.0'};
+        var _test = {6:'2.0',7:'3.0',8:'4.0',9:'5.0',10:'6.0',11:'7.0'};
         _kernel.release = _test[document.documentMode]||
                           _test[parseInt(_kernel.version)];
     }else if(/webkit\/?([\d.]+?)(?=\s|$)/i.test(_useragent)){
@@ -113,37 +154,47 @@ var f = function(){
         }
     }
     /**
-     * 引擎属性支持信息<br/>
-     * css3d - can support css 3d effect
-     * @const  {nej.p._$SUPPORT}
-     * @type   {Object}
+     * 引擎特性支持信息
+     * 
+     * ```javascript
+     * NEJ.define([
+     *     'base/platform'
+     * ],function(_m){
+     *     var _support = _m._$SUPPORT;
+     *     // 打印平台是否支持CSS3 3D特效
+     *     console.log(_support.css3d);
+     * });
+     * ```
+     * @const    module:base/platform._$SUPPORT
+     * @see      module:base/platform._$support
+     * @type     {Object}
+     * @property {Boolean} css3d  - 是否支持CSS3 3D
      */
     _p._$SUPPORT = {};
     /**
-     * 平台补丁判断信息
-     * [ntb]
-     *  参数名称       | 参数类型          | 参数描述
-     *  ------------------------------------
-     *  gecko    | Boolean  | not gecko
-     *  webkit   | Boolean  | not webkit
-     *  presto   | Boolean  | not presto
-     *  trident  | Boolean  | not trident
-     *  trident1 | Boolean  | not trident1
-     *  trident2 | Boolean  | not trident2
-     * [/ntb]
-     * @const  {nej.p._$NOT_PATCH}
-     * @type   {Object}
+     * 判断平台是否支持指定特性
+     * 
+     * ```javascript
+     * NEJ.define([
+     *     'base/platform'
+     * ],function(_m){
+     *     // 是否支持CSS3 3D特效
+     *     console.log(_m._$support('css3d'));
+     * });
+     * ```
+     * 
+     * @method module:base/platform._$support
+     * @see    module:base/platform._$SUPPORT
+     * @param  {String} arg0 - 特性标识
+     * @return {Boolean}       是否支持指定特性
      */
-    _p._$NOT_PATCH = {
-        gecko : _kernel.engine!='gecko'
-       ,webkit: _kernel.engine!='webkit'
-       ,presto: _kernel.engine!='presto'
-       // split trident with ie10(html5/css3 support)
-       ,trident  : _kernel.engine!='trident'||_kernel.release>='6.0'
-       ,trident1 : _kernel.engine!='trident'||_kernel.release<'6.0'
-       // fix for ie6
-       ,trident2 : _kernel.engine!='trident'||_kernel.release!='2.0'
+    _p._$support = function(_feature){
+        return !!_p._$SUPPORT[_feature];
     };
-};
-define('{lib}base/platform.js',
-      ['{lib}base/global.js'],f);
+    
+    if (CMPT){
+        NEJ.copy(NEJ.P('nej.p'),_p);
+    }
+    
+    return _p;
+});

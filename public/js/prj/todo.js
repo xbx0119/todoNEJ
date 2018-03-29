@@ -1,6 +1,7 @@
 var todo = function () {
     var _ = NEJ.P,
         _e = _('nej.e'),
+        _u = _('nej.u'),
         _v = _('nej.v'),
         _j = _('nej.j'),
         _m = _('nej.modal');
@@ -11,8 +12,13 @@ var todo = function () {
         UNDO: '/api/todo_undo'
     }
 
+
+    var _submitBtn = _e._$get('submit'),
+        _titleInput = _e._$get('title'),
+        _contentInput = _e._$get('content');
+
     // 获取列表数据
-    const search = function(url) {
+    const _search = function(url) {
         _j._$request(url, {
             sync: false,
             type: "json",
@@ -22,21 +28,29 @@ var todo = function () {
         });
     }
 
-    const add = function() {
+    // 添加请求
+    const _add = function() {
         _j._$request('/api/todo', {
             sync: false,
             type: "json",
-            data: null,
+            data: _u._$object2string({
+                "title": _titleInput.value,
+                "content": _contentInput.value
+            }, '&'),
             method: "POST",
-            onload: function(data) {
-                // 显示成功或失败消息
-                alert(data)
-                search(TODO_API.ALL)
+            onload: function (data) {
+                if(data) {
+                    window.location.href = '/';
+                }else {
+                    alert("添加出错")
+                }
             }
         });
-    }
+    };
+    _v._$addEvent(_submitBtn, 'click', _add._$bind(this))
 
-    const del = function(id) {
+
+    const _del = function(id) {
         _j._$request('/api/todo/' + id, {
             sync: false,
             type: "json",
@@ -44,39 +58,50 @@ var todo = function () {
             method: "DELETE",
             onload: function (data) {
                 console.log(data)
-                search(TODO_API.ALL)
+                _search(TODO_API.ALL)
             }
         });
     }
-
-    const showDelModal = function(e) {
+    const _showDelModal = function(e) {
         var _id = e.target.parentNode.dataset.key;
         _m._$showModal(e, function() {
-            del(_id)
+            _del(_id)
         });
     }
 
-
-    // 页面按钮功能函数绑定
-    // _v._$addEvent(_e._$get('add'), 'click', showAddModdal._$bind(this));
-    // _v._$addEvent(_e._$get('edit'), 'click', showEditModdal._$bind(this));
-    // _v._$addEvent(_e._$get('del'), 'click', showAddModdal._$bind(this));
+    const _check = function(e) {
+        console.log(e.target.parentNode.dataset.key)
+    }
 
     
     // 解析模板
     _e._$parseTemplate('template');
     // 渲染列表
     const renderItems = function (data) {
-        var _todolist = _e._$get('todo');
+        var _todolist = _e._$get('todo-list');
         _todolist.innerHTML = _e._$getHtmlTemplate('box1', { xlist: data  });
 
         // 绑定事件
-        var _delBtn = _e._$getByClassName('todo', 'todo-item-del');
+        var _delBtn = _e._$getByClassName('todo-list', 'todo-item-del');
         _delBtn.forEach(function(btn, index) {
-            _v._$addEvent(btn, 'click', showDelModal);
+            _v._$addEvent(btn, 'click', _showDelModal);
+        });
+
+        var _delBtn = _e._$getByClassName('todo-list', 'todo-item-check');
+        _delBtn.forEach(function(btn, index) {
+            _v._$addEvent(btn, 'click', _check);
         });
     }
+
+    
     // 页面初始化
-    search(TODO_API.ALL);
+    _search(TODO_API.ALL);
+
+
+    dispatcher._$regist('/', {
+        title: 'Todo',
+        clazz: 'testtest',
+        module: '/index.html'
+    });
 };
 define(['{lib}base/element.js', '{lib}util/template/tpl.js', '{pro}js/prj/modal.js'], todo);

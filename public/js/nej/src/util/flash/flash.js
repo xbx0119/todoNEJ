@@ -5,107 +5,128 @@
  * @author   genify(caijf@corp.netease.com)
  * ------------------------------------------
  */
-var f = function(){
-    var _  = NEJ.P,
-        _o = NEJ.O,
-        _u = _('nej.u'),
-        _e = _('nej.e'),
-        _v = _('nej.v'),
-        _h = _('nej.h'),
-        _w = _('nej.ut.j.cb');
-    var _seed_html = _e._$addHtmlTemplate('\
-        {var hide  = defined("hidden")&&!!hidden}\
-        {var param = defined("params")&&params||NEJ.O}\
-        {var width = !hide?width:"1px",height = !hide?height:"1px"}\
-        {if hide}<div style="position:absolute;top:0;left:0;width:1px;height:1px;z-index:10000;overflow:hidden;">{/if}\
-        <object classid = "clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"\
-                codebase = "http://fpdownload.macromedia.com/get/flashplayer/current/swflash.cab"\
-                width = "${width|default:"100px"}"\
-                height = "${height|default:"100px"}" id="${id}">\
-            <param value="${src}" name="movie">\
-            {for x in param}\
-            <param value="${x}" name="${x_key}"/>\
-            {/for}\
-            <embed src="${src}" name="${id}"\
-                   width="${width|default:"100px"}"\
-                   height="${height|default:"100px"}"\
-                   pluginspage="http://www.adobe.com/go/getflashplayer"\
-                   type="application/x-shockwave-flash"\
-                   {for x in param}${x_key}="${x}" {/for}></embed>\
-        </object>\
-        {if hide}</div>{/if}');
+/** @module util/flash/flash */
+NEJ.define([
+    'base/global',
+    'base/element',
+    'base/event',
+    'base/util',
+    'util/template/jst',
+    'util/timer/animation',
+    '{platform}flash.js',
+    'text!./flash.html'
+],function(NEJ,_e,_v,_u,_t0,_t1,_h,_html,_p,_o,_f,_r){
+    var _seed_html = _t0._$add(_html);
     /**
-     * 页面嵌入flash<br />
-     * 页面结构举例
-     * [code type="html"]
-     *   <div id='flash'></div>
-     * [/code]
+     * 页面嵌入flash，NEJ嵌入Flash如果需要同JS交互的遵循以下规则
+     *
+     *  1. Flash对象提供JS可访问接口 inited （返回Boolean值）
+     *  2. 如果Flash未初始化完成inited返回为false
+     *  3. 如果Flash初始化完成inited返回为true
+     *  4. inited返回true表示Flash已完成所有初始化，此时JS可调用Flash的API
+     *
+     * Flash事件规则
+     *
+     *  1. JS中使用window.onflashevent监听flash中的事件（此步骤NEJ已封装）
+     *  2. Flash通过flashvars参数输入当前flash的ID，如 &lt;param name="flashvars" value="id=ab&a=b"/&gt;
+     *  3. Flash在需要触发事件时调用window.onflashevent回调函数，并输入一个Object作为参数,Object信息包括
+     *     type   [String] - 鼠标事件类型，如click/mouseover/mouseout/play/pause...
+     *     target [String] - 触发事件的flash标识，通过flashvars参数输入的id参数，做了encodeURIComponent，如a%23b
+     *     ...
+     *
+     * 结构举例
+     * ```html
+     * <div id='flash'></div>
+     * ```
+     *
      * 脚本举例
-     * [code]
-     *   var _swf = '../../qunit/res/FlexChart.swf';
-     *   _onFlashReady = function(_flash){
-     *      // 返回准备好的flash对象
-     *   }
-     *   // 生成flash对象，可以设置宽高，地址，父节点，flash参数在params中设置
-     *   // flash需要提供inited接口，返回falsh已经准备好的状态
-     *   _e._$flash({src:_swf
-     *              ,hidden:false
-     *              ,parent:_e._$get('flash')
-     *              ,width:900
-     *              ,height:600
-     *              ,params:{flashvars:''
-     *                      ,allowscriptaccess:'always'
-     *                      ,wmode:'transparent'}
-     *              ,onready:_onFlashReady._$bind(this)});
-     * [/code]
-     * @api    {nej.e._$flash}
-     * @param  {Object} 可选配置参数，已处理参数列表如下
-     * @config {String}      src     Flash文件地址，必须指定地址
-     * @config {Boolean}     hidden  Flash是否不可见
-     * @config {Number}      width   Flash显示宽度，设为不可见时可以不设此参数
-     * @config {Number}      height  Flash显示高度，设为不可见时可以不设此参数
-     * @config {String|Node} parent  容器节点，默认为document.body
-     * @conifg {Object}      params  设置参数
-     * @return {Flash}                  flash对象
-     * 
-     * [hr]
-     * 
-     * @event  {onready} Flash初始化完毕触发事件
-     * @param  {Flash}   Flash对象
-     * 
+     * ```javascript
+     * NEJ.define([
+     *     'util/flash/flash'
+     * ],function(_e){
+     *     // 生成flash对象，可以设置宽高，地址，父节点，flash参数在params中设置
+     *     // flash需要提供inited接口，返回falsh已经准备好的状态
+     *     _e._$flash({
+     *         src:'../../qunit/res/FlexChart.swf',
+     *         hidden:false,
+     *         parent:'flash',
+     *         width:900,
+     *         height:600,
+     *         params:{
+     *             flashvars:'',
+     *             wmode:'transparent',
+     *             allowscriptaccess:'always'
+     *         },
+     *         onready:function(_flash){
+     *             // 返回准备好的flash对象
+     *             // 如果没有传入flash对象则表示无法识别到flash
+     *         },
+     *         oncustom:function(_event){
+     *             // 自定义事件需Flash同JS预先协定好自定义事件名称，如这里的oncustom
+     *             // Flash中通过调用JS的window.onflashevent({id:2222,type:'custom',...})调入此回调
+     *         }
+     *     });
+     * });
+     * ```
+     *
+     * @method   module:util/flash/flash._$flash
+     * @param    {Object}      arg0    - 可选配置参数
+     * @property {String}      src     - Flash文件地址，必须指定地址
+     * @property {Boolean}     hidden  - Flash是否不可见
+     * @property {Number}      width   - Flash显示宽度，设为不可见时可以不设此参数
+     * @property {Number}      height  - Flash显示高度，设为不可见时可以不设此参数
+     * @property {String|Node} parent  - 容器节点，默认为document.body
+     * @property {Object}      params  - 设置参数，object标签中的param标签参数
+     * @property {String|Node} target  - 触发事件的源节点
+     * @property {Function}    onready - Flash初始化完毕触发事件，输入可交互的Flash对象
+     * @return   {Void}
      */
-    _e._$flash = (function(){
-        var _cache = {},
-            _seed = +new Date;
+    _p._$flash = (function(){
+        var _cache = {},_title,
+            _reg0 = /^(?:mouse.*|(?:dbl)?click)$/i;
+        // flash event
+        window.onflashevent = function(_event){
+            var _id = decodeURIComponent(_event.target),
+                _type = _event.type.toLowerCase();
+            // check mouse event bubble
+            var _target = _cache[_id+'-tgt'];
+            if (!!_target&&_reg0.test(_type)){
+                _doMouseEventBubble(
+                    _target,_event
+                );
+            }
+            // check id-type handler
+            var _handler = _cache[_id+'-on'+_type];
+            if (!!_handler){
+                var _result = '';
+                try{
+                    _result = _handler(_event);
+                }catch(e){
+                    // ignore
+                }
+                return _result;
+            }
+        };
         // append flash element
         var _doInitDOM = function(_options){
+            // bugfix for ie title with flash
+            _title = document.title;
             var _parent = _e._$get(_options.parent)||document.body,
-                _html = _e._$getHtmlTemplate(_seed_html,_options);
+                _html = _t0._$get(_seed_html,_options);
             _parent.insertAdjacentHTML(
-               !_options.hidden?'beforeEnd':'afterBegin',_html);
+               !_options.hidden?'beforeEnd':'afterBegin',_html
+            );
         };
-        // init flash vars
-        var _doInitFlashVars = function(_options,_name){
-            var _params = _options.params;
-            if (!_params){
-                _params = {};
-                _options.params = _params;
-            }
-            var _vars = _params.flashvars||'';
-            if (_h.__canFlashEventBubble(_params.wmode))
-                _vars += (!_vars?'':'&')+('onevent=nej.ut.j.cb.'+_name);
-            _params.flashvars = _vars;
+        // listen flash mouse event
+        var _doMouseEventBubble = function(_id,_event){
+            var _type = _event.type.toLowerCase();
+            _t1.requestAnimationFrame(function(){
+                _v._$dispatchEvent(_id,_type);
+            });
         };
         // check flash init state
         var _doCheckFlashInit = function(_flash){
             return !!_flash&&!!_flash.inited&&!!_flash.inited();
-        };
-        // listen flash mouse event
-        var _doListenFlashEvent = function(_id,_event){
-            var _element = _e._$get(_id);
-            if (!!_element)
-                _v._$dispatchEvent(
-                    _element.parentNode,_event.type);
         };
         var _doCheckFlash = function(_id){
             var _arr = [document.embeds[_id],
@@ -115,6 +136,10 @@ var f = function(){
                 _ctkey = _id+'-count';
             _cache[_ctkey]++;
             if (!!_flash||_cache[_ctkey]>100){
+                if (!!_title){
+                    document.title = _title;
+                    _title = null;
+                }
                 _cache[_id](_flash);
                 delete _cache[_id];
                 delete _cache[_ctkey];
@@ -122,23 +147,52 @@ var f = function(){
             }
             window.setTimeout(_doCheckFlash._$bind(null,_id),300);
         };
-        return function(_options){
-            _options = _options||{};
-            if (!_options.src) return;
-            var _id = _options.id||('flash-'+(_seed++));
-            _options.id = _id;
-            // delegate mouse event
-            if (!_options.hidden){
-                _w['cb'+_seed] = _doListenFlashEvent._$bind(null,_id);
-                _doInitFlashVars(_options,'cb'+_seed);
+        // init flash event
+        var _doInitFlashEvent = function(_options){
+            // init flash vars
+            var _id = _options.id,
+                _params = _options.params;
+            if (!_params){
+                _params = {};
+                _options.params = _params;
             }
+            var _vars = _params.flashvars||'';
+            _vars += (!_vars?'':'&')+('id='+_id);
+            // delegate mouse event bubble
+            if (!_options.hidden&&(!!_options.target||
+                 _h.__canFlashEventBubble(_params.wmode))){
+                var _tid = _e._$id(_options.target)||
+                           _e._$id(_options.parent);
+                _cache[_id+'-tgt'] = _tid;
+            }
+            _params.flashvars = _vars;
+            // check event callback
+            _u._$loop(_options,function(_value,_key){
+                if (_u._$isFunction(_value)&&_key!='onready'){
+                    _cache[_id+'-'+_key] = _value;
+                }
+            });
+        };
+        return function(_options){
+            _options = NEJ.X({},_options);
+            if (!_options.src) return;
+            var _id = '_'+_u._$uniqueID();
+            _options.id = _id;
+            // delegate event
+            _doInitFlashEvent(_options);
+            // append flash
             _doInitDOM(_options);
+            // check flash ready
             if (!_options.onready) return;
             _cache[_id] = _options.onready;
             _cache[_id+'-count'] = 0;
             _doCheckFlash(_id);
         };
     })();
-};
-define('{lib}util/flash/flash.js',
-      ['{lib}util/template/jst.js'],f);
+
+    if (CMPT){
+        NEJ.copy(NEJ.P('nej.e'),_p);
+    }
+
+    return _p;
+});

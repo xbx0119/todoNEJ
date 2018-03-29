@@ -5,41 +5,60 @@
  * @author   genify(caijf@corp.netease.com)
  * ------------------------------------------
  */
-var f = function(){
-    var _  = NEJ.P,
-        _e = _('nej.e'),
-        _p = _('nej.ui'),
-        _proCustomEditor,
-        _supCustomEditor;
-    if (!!_p._$$CustomEditor) return;
-    // ui html code
-    var _seed_html;
+/** @module ui/editor/custom */
+NEJ.define([
+    'base/global',
+    'base/klass',
+    'ui/editor/editor',
+    'util/template/tpl',
+    'util/editor/command/fontsize',
+    'util/editor/command/fontname',
+    'util/editor/command/bold',
+    'util/editor/command/italic',
+    'util/editor/command/insertorderedlist',
+    'util/editor/command/insertunorderedlist',
+    'util/editor/command/underline',
+    'util/editor/command/strikethrough',
+    'util/editor/command/forecolor',
+    'util/editor/command/backcolor',
+    'util/editor/command/justifyleft',
+    'util/editor/command/justifycenter',
+    'util/editor/command/justifyright',
+    'util/editor/command/link',
+    'util/editor/command/format',
+    'util/editor/command/uploadimage',
+    'util/editor/command/blockquote'
+],function(NEJ,_k,_i0,_t0,_t1,_t2,_t3,_t4,_t5,_t6,_t7,_t8,_t9,_t10,_t11,_t12,_t13,_t14,_t15,_t16,_t17,_p,_o,_f,_r){
+    var _pro,
+        _seed_html;
     /**
      * 富媒体编辑器封装
-     * @class   {nej.ui._$$CustomEditor} 富媒体编辑器封装
-     * @extends {nej.ui._$$Editor}
-     * @param   {Object} 可选配置参数，已处理参数列表如下
+     *
+     * @class   module:ui/editor/custom._$$CustomEditor
+     * @extends module:ui/editor/editor._$$Editor
+     * @param   {Object} arg0 - 可选配置参数
      */
-    _p._$$CustomEditor = NEJ.C();
-      _proCustomEditor = _p._$$CustomEditor._$extend(_p._$$Editor);
-      _supCustomEditor = _p._$$CustomEditor._$supro;
+    _p._$$CustomEditor = _k._$klass();
+    _pro = _p._$$CustomEditor._$extend(_i0._$$Editor);
     /**
      * 初始化外观信息
+     *
      * @protected
-     * @method {__initXGui}
+     * @method module:ui/editor/custom._$$CustomEditor#__initXGui
      * @return {Void}
      */
-    _proCustomEditor.__initXGui = function(){
-        _supCustomEditor.__initXGui.apply(this,arguments);
+    _pro.__initXGui = function(){
+        this.__super();
         this.__seed_html = _seed_html;
     };
     /**
      * 动态构建控件节点模板
+     *
      * @protected
-     * @method {__initNodeTemplate}
+     * @method module:ui/editor/custom._$$CustomEditor#__initNodeTemplate
      * @return {Void}
      */
-    _proCustomEditor.__initNodeTemplate = (function(){
+    _pro.__initNodeTemplate = (function(){
         var _flist = [{cmd:'bold',txt:'加粗',icn:'z-i-30'}
                      ,{cmd:'italic',txt:'斜体',icn:'z-i-31'}
                      ,{cmd:'underline',txt:'下划线',icn:'z-i-32'}
@@ -50,9 +69,12 @@ var f = function(){
                      ,{cmd:'hiliteColor',txt:'背景颜色',icn:'z-i-122'}],
             _tlist = [{cmd:'justifyLeft',txt:'左对齐',icn:'z-i-50'}
                      ,{cmd:'justifyCenter',txt:'居中对齐',icn:'z-i-51'}
-                     ,{cmd:'justifyRight',txt:'右对齐',icn:'z-i-52'}];
+                     ,{cmd:'justifyRight',txt:'右对齐',icn:'z-i-52'}
+                     ,{cmd:'link',txt:'超链接',icn:'z-i-42'}
+                     ,{cmd:'format',txt:'清除格式',icn:'z-i-72'}
+                     ,{cmd:'uploadImage',txt:'照片上传',icn:'z-i-82'}];
         return function(){
-            _seed_html = _e._$addNodeTemplate(
+            _seed_html = _t0._$addNodeTemplate(
                 this.__doGenEditorXhtml({
                     toolbar:this.__doGenFontSizeXhtml()
                            +this.__doGenFontNameXhtml()
@@ -62,21 +84,10 @@ var f = function(){
             this.__seed_html = _seed_html;
         };
     })();
-};
-define('{lib}ui/editor/custom.js',
-      ['{lib}ui/editor/editor.js'
-      ,'{lib}util/editor/command/fontsize.js'
-      ,'{lib}util/editor/command/fontname.js'
-      ,'{lib}util/editor/command/bold.js'
-      ,'{lib}util/editor/command/italic.js'
-      ,'{lib}util/editor/command/insertorderedlist.js'
-      ,'{lib}util/editor/command/insertunorderedlist.js'
-      ,'{lib}util/editor/command/underline.js'
-      ,'{lib}util/editor/command/strikethrough.js'
-      ,'{lib}util/editor/command/forecolor.js'
-      ,'{lib}util/editor/command/backcolor.js'
-      ,'{lib}util/editor/command/justifyleft.js'
-      ,'{lib}util/editor/command/justifycenter.js'
-      ,'{lib}util/editor/command/justifyright.js'
-      ,'{lib}util/editor/command/link.js'
-      ,'{lib}util/editor/command/blockquote.js'],f);
+
+    if (CMPT){
+        NEJ.copy(NEJ.P('nej.ui'),_p);
+    }
+
+    return _p;
+});
