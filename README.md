@@ -40,15 +40,18 @@ a Todo List App based on NEJ
 3. GET /api/todo_done 
     * 获取已完成的todo
     * 参数： 无
-4. POST /api/todo 
+4. GET /api/todo/:id
+    * 获取具体某一条记录
+    * 参数：无
+5. POST /api/todo 
     * 添加新的todo
     * 参数 
         * title: String, todo的标题, 
         * content: String, todo的内容 
-5. PUT /api/todo/:id
+6. PUT /api/todo/:id
     * 更新todo
     * 参数 
         * todo: Object, 新的todo的对象
-6. DELETE /api/todp/:id 
+7. DELETE /api/todp/:id 
     * 删除todo
     * 参数：无
