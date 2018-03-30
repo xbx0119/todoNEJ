@@ -5,10 +5,26 @@ a Todo List App based on NEJ
 页面主要面向移动端，未对pc端做调优，请使用手机访问或将pc浏览器调整到手机设备模式  
 
 
+## 技术说明
+* 前端：NEJ  
+* 后端：Nodejs + Express + MongoDB
+
+
 ## 仓库分支说明
 * master
 * use-nej-module: 使用nej的模块化，开发中
 
+
+## 安装运行说明
+``` bash
+git clone https://github.com/xbx0119/todoNEJ.git
+cd todoNEJ
+npm install 
+# 安装mongodb, 导入database/db数据库文件
+npm start
+# 浏览器访问localhost:3000
+
+```
 
 ## 功能描述
 * 查看todo项
