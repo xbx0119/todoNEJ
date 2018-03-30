@@ -4,38 +4,35 @@ var todo = function () {
         _u = _('nej.u'),
         _v = _('nej.v'),
         _j = _('nej.j'),
-        _m = _('nej.modal');
+        _m = _('nej.modal');    
 
-    const TODO_API = {
+    var _t = NEJ.C();
+    
+    const _TODO_API = {
         ALL: '/api/todo_all',
         DONE: '/api/todo_done',
         UNDO: '/api/todo_undo'
     }
 
-
-    var _submitBtn = _e._$get('submit'),
-        _titleInput = _e._$get('title'),
-        _contentInput = _e._$get('content');
-
     // 获取列表数据
-    const _search = function(url) {
+    const _search = function(url, cb) {
         _j._$request(url, {
             sync: false,
             type: "json",
             data: null,
             method: "GET",
-            onload: renderItems
+            onload: cb || renderItems
         });
     }
 
     // 添加请求
-    const _add = function() {
+    const _add = function(data) {
         _j._$request('/api/todo', {
             sync: false,
             type: "json",
             data: _u._$object2string({
-                "title": _titleInput.value,
-                "content": _contentInput.value
+                "title": data.title,
+                "content": data.content
             }, '&'),
             method: "POST",
             onload: function (data) {
@@ -47,7 +44,7 @@ var todo = function () {
             }
         });
     };
-    _v._$addEvent(_submitBtn, 'click', _add._$bind(this))
+    
 
 
     const _del = function(id) {
@@ -58,7 +55,7 @@ var todo = function () {
             method: "DELETE",
             onload: function (data) {
                 console.log(data)
-                _search(TODO_API.ALL)
+                _search(_TODO_API.ALL)
             }
         });
     }
@@ -68,6 +65,26 @@ var todo = function () {
             _del(_id)
         });
     }
+
+    const _edit = function (id, data) {
+        console.log(data)
+        _j._$request('/api/todo/' + id, {
+            sync: false,
+            type: "json",
+            data: _u._$object2string({
+                "title": data.title,
+                "content": data.content
+            }, '&'),
+            method: "PUT",
+            onload: function (data) {
+                if (data) {
+                    // window.location.href = '/';
+                } else {
+                    alert("修改出错")
+                }
+            }
+        });
+    };
 
     const _check = function(e) {
         console.log(e.target.parentNode.dataset.key)
@@ -92,16 +109,13 @@ var todo = function () {
             _v._$addEvent(btn, 'click', _check);
         });
     }
-
     
-    // 页面初始化
-    _search(TODO_API.ALL);
+    _t._$api = _TODO_API;
 
+    _t._$search = _search;
+    _t._$add = _add;
+    _t._$edit = _edit;
 
-    dispatcher._$regist('/', {
-        title: 'Todo',
-        clazz: 'testtest',
-        module: '/index.html'
-    });
+    return _t;
 };
 define(['{lib}base/element.js', '{lib}util/template/tpl.js', '{pro}js/prj/modal.js'], todo);

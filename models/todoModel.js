@@ -5,6 +5,21 @@ var Todo = mongoose.model('todo', Schemas.todoSchema);
 var TodoModel = {};
 
 
+TodoModel.findOne = async function (id) {
+    try {
+        var list = await Todo.find({
+            _id: id
+        });
+        if (list) {
+            return list;
+        } else {
+            return false;
+        }
+    } catch (e) {
+        return false;
+    }
+}
+
 TodoModel.findAll = async function () {
     try {
         var list = await Todo.find({}).sort({ "_id": -1 });

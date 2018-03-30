@@ -10,6 +10,9 @@ router.get('/', function(req, res, next) {
 router.get('/add', function(req, res, next) {
   res.render('add')
 });
+router.get('/edit/:id', function(req, res, next) {
+  res.render('edit')
+});
 
 
 // 注册api

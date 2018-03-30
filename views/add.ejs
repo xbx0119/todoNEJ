@@ -34,6 +34,23 @@
     </div>
 
     <script src="/js/nej/src/define.js?pro=./"></script>
-    <script src="/js/prj/todo.js"></script>
+    <script>
+        define(['/js/prj/todo.js'], function(_t) {
+            var _ = NEJ.P,
+                _e = _('nej.e'),
+                _v = _('nej.v');
+
+            var _submitBtn = _e._$get('submit'),
+                _titleInput = _e._$get('title'),
+                _contentInput = _e._$get('content');
+
+            _v._$addEvent(_submitBtn, 'click', function() {
+                _t._$add({
+                    title: _titleInput.value,
+                    content: _contentInput.value
+                })
+            })
+        })
+    </script>
 </body>
 </html>

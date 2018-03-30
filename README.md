@@ -1,9 +1,24 @@
 # todoNEJ
 a Todo List App based on NEJ  
-网易校招入职考核作业
+
+演示地址：norma0119.cn:3000  
+页面主要面向移动端，未对pc端做调优，请使用手机访问或将pc浏览器调整到手机设备模式  
+
+
+## 仓库分支说明
+* master
+* use-nej-module: 使用nej的模块化，开发中
 
 
 ## 功能描述
+* 查看todo项
+* 增加todo项
+* 删除todo项
+* 修改todo项
+
+待开发功能：
+* 搜索框搜索
+* 勾选完成
 
 
 ## 数据库说明

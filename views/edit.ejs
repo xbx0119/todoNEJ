@@ -22,10 +22,10 @@
                 </div>
                 <div class="form-item">
                     <label for="content"><p class="form-item-name">代办项说明</p></label>
-                    <textarea name="title" id="title"></textarea>
+                    <textarea name="title" id="content"></textarea>
                 </div>
                 <div class="form-item">
-                    <button type="button">添加</button>
+                    <button type="button" id="edit">修改</button>
                 </div>
             </form>
 
@@ -34,6 +34,30 @@
     </div>
 
     <script src="/js/nej/src/define.js?pro=./"></script>
-    <!-- <script src="/js/prj/todo.js"></script> -->
+    <script>
+        define(['/js/prj/todo.js'], function (_t) {
+            var _ = NEJ.P,
+                _e = _('nej.e'),
+                _v = _('nej.v');
+
+            var _editBtn = _e._$get('edit'),
+                _titleInput = _e._$get('title'),
+                _contentInput = _e._$get('content');
+
+
+            const _id = location.pathname.split("/")[2];
+            _t._$search('/api/todo/' + _id, function(data) {
+                _titleInput.value = data[0].title;
+                _contentInput.value = data[0].content;
+            });
+
+            _v._$addEvent(_editBtn, 'click', function () {
+                _t._$edit(_id, {
+                    title: _titleInput.value,
+                    content: _contentInput.value
+                })
+            })
+        })
+    </script>
 </body>
 </html>

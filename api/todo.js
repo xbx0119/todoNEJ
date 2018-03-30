@@ -2,6 +2,15 @@ var express = require('express');
 var router = express.Router();
 var Todo = require('../models/todoModel');
 
+const getTodo = async function (req, res, next) {
+    try {
+        let list = await Todo.findOne(req.params.id);
+        res.send(list);
+    }catch(err) {
+        res.send()
+    }
+}
+
 const getAll = async function (req, res, next) {
     try {
         let list = await Todo.findAll();
@@ -61,11 +70,10 @@ const del = async function (req, res, next) {
 const edit = async function (req, res, next) {
     const item = {
         title: req.body.title,
-        content: req.body.content,
-        done: req.body.done
+        content: req.body.content
     }
     try {
-        if (await Todo.edit(req.body.id, item)) {
+        if (await Todo.edit(req.params.id, item)) {
             res.send(true);
         } else {
             res.send()
@@ -78,6 +86,7 @@ const edit = async function (req, res, next) {
 
 
 exports.regist = function(router) {
+    router.get('/api/todo/:id', getTodo);
     router.get('/api/todo_all', getAll);
     router.get('/api/todo_undo', getUndo);
     router.get('/api/todo_done', getDone);

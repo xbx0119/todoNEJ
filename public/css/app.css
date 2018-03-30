@@ -28,11 +28,12 @@ html, body {
 .header {
     width: 750px;
     text-align: center;
-    height: 200px;
+    height: 150px;
     display: flex;
     align-items: center;
     box-sizing: border-box;
     margin: 0 auto;
+    margin-top: 100px;
     background: #2b85e4;
 }
 .header .icon {
@@ -120,6 +121,10 @@ html, body {
     font-size: 1.5rem;
     color: #666;
 }
+.todo-item a {
+    text-decoration: none;
+    width: 100%;
+}
 
 .todo-item .todo-item-check {
     margin-right: 10px;
@@ -186,6 +191,7 @@ html, body {
         z-index: 999;
         padding: 0 15px;
         background: #2b85e4;
+        margin-top: 0px;
     }
     .appName {
         font-style: normal;
