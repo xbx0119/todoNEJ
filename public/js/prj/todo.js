@@ -1,4 +1,4 @@
-var todo = function () {
+var todo = function (_p) {
     var _ = NEJ.P,
         _e = _('nej.e'),
         _u = _('nej.u'),
@@ -75,7 +75,7 @@ var todo = function () {
 
     
     // 解析模板
-    _e._$parseTemplate('template');
+    _e._$parseTemplate('list-template');
     // 渲染列表
     const renderItems = function (data) {
         var _todolist = _e._$get('todo-list');
@@ -93,15 +93,14 @@ var todo = function () {
         });
     }
 
+
+    _p._$add = _add;
+    _p._$del = _del;
+    _p._$check = _check;
+    _p._$search = _search;
     
     // 页面初始化
     _search(TODO_API.ALL);
 
-
-    dispatcher._$regist('/', {
-        title: 'Todo',
-        clazz: 'testtest',
-        module: '/index.html'
-    });
 };
-define(['{lib}base/element.js', '{lib}util/template/tpl.js', '{pro}js/prj/modal.js'], todo);
+define(['util/dispatcher/dispatcher', '{lib}base/element.js', '{lib}util/template/tpl.js', '{pro}js/prj/modal.js'], todo);

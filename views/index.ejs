@@ -11,7 +11,20 @@
     <div class="bg_img"></div>
     <div id="root"></div>
 
+    <div id="router-view" style="display:none;">
+        <textarea name="html" data-src="/html/app.html"></textarea>
+    </div>
+
     <script src="/js/nej/src/define.js?pro=./"></script>
     <script src="/js/prj/router.js"></script>
+    <script src="/js/prj/todo.js"></script>
+    <script>
+        NEJ.define([
+            '{lib}util/dispatcher/test.js'
+        ], function (_e) {
+            document.mbody = 'root'
+            _e._$testByTemplate('router-view');
+        });
+    </script>
 </body>
 </html>

@@ -1,0 +1,22 @@
+<textarea name="txt" id="show-module">
+    <div id="todo">
+        <div id="todo-search">
+            <input type="text" placeholder="输入搜索">
+        </div>
+        <!-- <div id="todo-filter"></div> -->
+        <div id="todo-list"></div>
+    </div>
+    <div id="list-template" style="display:none;">
+        <textarea name="jst" id="box1">
+            {list xlist as x}
+                <li class="todo-item" data-key="${x._id}">
+                    <i class="icon ion-android-checkbox-outline-blank todo-item-check"></i>
+                    <p class="todo-item-name">${x.title}</p>
+                    <i class="icon ion-trash-a todo-item-del"></i>
+                </li>
+            {/list}
+        </textarea>
+    </div>
+</textarea>
+
+<textarea name="js" data-src="../../js/prj/show.js"></textarea>
